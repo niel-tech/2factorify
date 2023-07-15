@@ -24,7 +24,7 @@ export default function OtpRender({ otpAuthUrl, index }: TotpProps) {
   return (
     <div className="my-2.5">
       <div className="flex items-center">
-        <h2 className="my-1 text-left text-lg font-bold text-gray-700">
+        <h2 className="my-1 break-all text-left text-lg font-bold text-gray-700">
           {otpAuthUrl.issuer && otpAuthUrl.account !== otpAuthUrl.issuer
             ? `${otpAuthUrl.issuer}: ${otpAuthUrl.account}`
             : `${otpAuthUrl.account}`}
