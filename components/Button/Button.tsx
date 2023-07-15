@@ -53,7 +53,10 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLAnchorElemen
 export function Button({ className, intent, size, underline, disabled, ...props }: ButtonProps | any) {
   return (
     <button
-      className={twMerge(button({ intent, size, className, underline, disabled }))}
+      className={classNames(
+        twMerge(button({ intent, size, className, underline, disabled })),
+        disabled && "cursor-not-allowed border-0 bg-blue-300 text-white"
+      )}
       disabled={disabled}
       {...props}
     >

@@ -2,6 +2,7 @@
 const { pick, omit } = require("lodash")
 const colors = require("tailwindcss/colors")
 const defaultTheme = require("tailwindcss/defaultTheme")
+const plugin = require("tailwindcss/plugin")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -51,7 +52,17 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities({
+        "stroke-dash-offset": (value) => {
+          return {
+            "stroke-dashoffset": value,
+          }
+        },
+      })
+    }),
+  ],
   future: {
     hoverOnlyWhenSupported: true,
   },

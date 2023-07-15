@@ -6,6 +6,22 @@ import { env } from "./env.mjs"
  * @type {import('next').NextConfig}
  */
 const config = withPlugins([[withBundleAnalyzer({ enabled: env.ANALYZE })]], {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+        pathname: "**"
+      },
+      {
+        protocol: "https",
+        hostname: "www.gravatar.com",
+        port: "",
+        pathname: "/avatar/**"
+      }
+    ]
+  },
   reactStrictMode: true,
   experimental: { instrumentationHook: true },
   rewrites() {

@@ -1,8 +1,8 @@
-import { FC, ReactElement } from "react"
+import { FC, ReactNode } from "react"
 import { classNames } from "../../utils/classNames"
 
 type InputLabelProps = {
-  children: ReactElement
+  children: ReactNode
   label: string
   className?: string
 }

@@ -38,7 +38,7 @@ export interface InputCopyProps extends InputHTMLAttributes<HTMLInputElement>, V
   readonly: boolean
 }
 
-export function InputCopy({ value, readonly }: InputCopyProps) {
+export function InputCopy({ value, readonly, ...props }: InputCopyProps) {
   const handleClick = (e: any) => {
     navigator.clipboard.writeText(value)
   }
@@ -48,9 +48,15 @@ export function InputCopy({ value, readonly }: InputCopyProps) {
   }
 
   return (
-    <div className="relative block w-full" onClick={handleClick}>
-      <Input className="block w-full cursor-pointer" value={value} readOnly={readonly} onFocus={handleFocus} />
-      <span className="absolute right-0 top-0 flex h-full items-center justify-end px-3">
+    <div className="relative block w-full">
+      <Input
+        className="block w-full cursor-pointer"
+        value={value}
+        readOnly={readonly}
+        onFocus={handleFocus}
+        {...props}
+      />
+      <span className="absolute right-0 top-0 flex h-full items-center justify-end px-3" onClick={handleClick}>
         <svg
           className="h-5 w-5 cursor-pointer items-center"
           width="15"
