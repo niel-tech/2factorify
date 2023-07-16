@@ -1,0 +1,76 @@
+import faunadb from "faunadb"
+
+const q = faunadb.query
+const { CreateRole, Collection, Index, Function, Functions, Roles, Query, Lambda, And, Equals, Select, Var } = q
+
+const CreateRoleUser = CreateRole({
+  name: "user",
+  privileges: [
+    {
+      resource: Collection("otp"),
+      actions: {
+        read: true,
+        write: true,
+        create: true,
+        delete: false,
+        history_read: false,
+        history_write: false,
+        unrestricted_read: false,
+      },
+    },
+    {
+      resource: Collection("sessions"),
+      actions: {
+        read: true,
+        write: true,
+        create: true,
+        delete: false,
+        history_read: false,
+        history_write: false,
+        unrestricted_read: false,
+      },
+    },
+    {
+      resource: Index("otp_by_userId"),
+      actions: {
+        unrestricted_read: false,
+        read: true,
+      },
+    },
+    {
+      resource: Index("session_by_session_token"),
+      actions: {
+        unrestricted_read: false,
+        read: true,
+      },
+    },
+    {
+      resource: Index("otp"),
+      actions: {
+        unrestricted_read: false,
+        read: true,
+      },
+    },
+    {
+      resource: Function("getOtpByUser"),
+      actions: {
+        call: true,
+      },
+    },
+    {
+      resource: Function("validateSession"),
+      actions: {
+        call: true,
+      },
+    },
+    {
+      resource: Function("createBatchedOtp"),
+      actions: {
+        call: true,
+      },
+    },
+  ],
+  membership: [],
+})
+
+export default CreateRoleUser
