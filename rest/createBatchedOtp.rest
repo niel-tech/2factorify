@@ -1,0 +1,6 @@
+POST http://localhost:3000/api/otp/create
+
+{
+  "bulkOtpUrls": [{ "saltedUrl": "saltedUrl1" },{ "saltedUrl": "saltedUrl2" },{ "saltedUrl": "saltedUrl3" },{ "saltedUrl": "saltedUrl4" },{ "saltedUrl": "saltedUrl5" }],
+  "sessionToken": "token"
+}

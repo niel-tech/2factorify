@@ -43,7 +43,7 @@ const CreateFunctionGetOtpByUser = CreateFunction({
                     ["ref"],
                     Create(Collection("otp"), {
                       data: {
-                        saltedUrl: Select(["data", "saltedUrl"], Var("otp")),
+                        saltedUrl: Select(["saltedUrl"], Var("otp")),
                         userId: Select(["ref", "id"], Var("getSession")),
                       },
                     })
@@ -51,22 +51,19 @@ const CreateFunctionGetOtpByUser = CreateFunction({
                 )
               ),
             },
-            Select(
-              "data",
-              Map(
-                Var("createBatchedOtp"),
-                Lambda(
-                  ["ref"],
-                  Let(
-                    {
-                      getOtp: Get(Var("ref")),
-                    },
-                    {
-                      id: Select(["ref", "id"], Var("getOtp")),
-                      saltedUrl: Select(["data", "saltedUrl"], Var("getOtp")),
-                      userId: Select(["data", "userId"], Var("getOtp")),
-                    }
-                  )
+            Map(
+              Var("createBatchedOtp"),
+              Lambda(
+                ["ref"],
+                Let(
+                  {
+                    getOtp: Get(Var("ref")),
+                  },
+                  {
+                    id: Select(["ref", "id"], Var("getOtp")),
+                    saltedUrl: Select(["data", "saltedUrl"], Var("getOtp")),
+                    userId: Select(["data", "userId"], Var("getOtp")),
+                  }
                 )
               )
             )

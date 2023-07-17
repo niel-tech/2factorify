@@ -1,5 +1,6 @@
 import { Client as FaunaClient } from "faunadb"
 import { gql, GraphQLClient } from "graphql-request"
+import { Otp } from "../models/otp.model"
 
 export const authClient = new FaunaClient({
   secret: (process.env.NODE_ENV === "development"
@@ -21,33 +22,47 @@ export const userClient = new GraphQLClient("https://graphql.eu.fauna.com/graphq
   fetch: fetch,
 })
 
-export const GET_BINS_BY_USER = (sessionToken?: string) => gql`
-  query getBinsByUser {
-    getBinsByUser(
-      session_token: "${sessionToken}"
-    ) {
-      title
-      hashed_id
-      lifetime
-      readOnce
-      isProtected
-      createdAt
+export const GET_OTP_BY_USER = gql`
+  query getOtpByUser($sessionToken: String!) {
+    getOtpByUser(session_token: $sessionToken) {
+      id
+      saltedUrl
     }
-  }`
+  }
+`
 
-/*export const getBinsByUser = (sessionToken: string): Promise<Bin[]> => {
-  return userClient.request(GET_BINS_BY_USER(sessionToken)).then(({ getBinsByUser }: any) => getBinsByUser)
+export const getOtpByUser = (sessionToken: string): Promise<Otp[]> => {
+  return userClient.request(GET_OTP_BY_USER, { sessionToken }).then(({ getOtpByUser }: any) => getOtpByUser)
 }
 
-export const validateSession = (sessionToken: string): Promise<{ userId: string }> => {
-  const query = `query validateSession {
-    validateSession(
-      session_token: "${sessionToken}"
-    ) {
+export const CREATE_BATCHED_OTP = gql`
+  mutation createBatchedOtp($sessionToken: String!, $otpBatches: [SaltedUrl!]!) {
+    createBatchedOtp(session_token: $sessionToken, otpBatches: $otpBatches) {
+      id
+      saltedUrl
       userId
     }
-  }`
+  }
+`
 
-  return userClient.request(query).then(({ validateSession }: any) => validateSession)
+export const createBatchedOtp = (sessionToken: string, otpBatches: { saltedUrl: string }[]): Promise<Otp[]> => {
+  console.log(CREATE_BATCHED_OTP, otpBatches)
+  return userClient
+    .request(CREATE_BATCHED_OTP, { sessionToken, otpBatches })
+    .then(({ createBatchedOtp }: any) => createBatchedOtp)
 }
-*/
+
+export const VALIDATE_SESSION = gql`
+  query validateSession($sessionToken: String!) {
+    validateSession(session_token: $sessionToken) {
+      userId
+    }
+  }
+`
+
+export const validateSession = (sessionToken: string): Promise<{ userId: string }> => {
+  return userClient
+    .request(VALIDATE_SESSION, { sessionToken })
+    .then(({ validateSession }: any) => validateSession)
+    .catch((e) => console.log(e))
+}

@@ -10,8 +10,8 @@ type ToggleContainerProps = {
 }
 
 const variants = {
-  toggleIn: { height: "100%" },
-  toggleOut: { height: "25px" },
+  toggleIn: { y: 0 },
+  toggleOut: { y: 25 },
 }
 
 export default function ToggleContainer({ toggleState, setToggleState, children, className }: ToggleContainerProps) {

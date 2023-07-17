@@ -38,16 +38,17 @@ const SVGValidUntil = ({ dashOffset }: SVGValidUntilProps) => {
   )
 }
 
-const useOtp = (otpAuthUrl: OtpAuthUrl) => {
+const useOtp = (otpAuthUrl?: OtpAuthUrl) => {
   const [dashOffset, setDashOffset] = useState<number>(0)
   const [token, setToken] = useState<string>()
 
   const stepSeconds =
-    Number.isInteger(Number(otpAuthUrl.period)) && Number(otpAuthUrl.period) > 0 ? Number(otpAuthUrl.period) : 30
+    Number.isInteger(Number(otpAuthUrl?.period)) && Number(otpAuthUrl?.period) > 0 ? Number(otpAuthUrl?.period) : 30
 
   const getRemainingSeconds = () => stepSeconds - ((Date.now() / 1000) % stepSeconds)
 
   const generateToken = () => {
+    if (!otpAuthUrl) return
     if (otpAuthUrl.secret.length < 16) {
       throw new Error("Secret minimum length is 16, but was only" + otpAuthUrl.secret.length)
     }

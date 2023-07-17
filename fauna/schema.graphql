@@ -1,23 +1,29 @@
 type Query {
-  otp: otp
-  getOtpByUser(session_token: String!): [otp!]! @resolver(name: "getOtpByUser")
+  validateSession(session_token: String!): SessionToken! @resolver(name: "validateSession")
+  getOtpByUser(session_token: String!): [NullableOtp!]! @resolver(name: "getOtpByUser")
 }
 
 type Mutation {
-  createBatchedOtp(session_token: String, otpBatches: [OtpInput!]!): [otp!]!
+  createBatchedOtp(session_token: String, otpBatches: [SaltedUrl!]!): [Otp]
     @resolver(name: "createBatchedOtp")
 }
 
-type otp {
+type Otp @embedded {
+  id: String!
+  saltedUrl: String!
+  userId: String!
+}
+
+type NullableOtp @embedded {
   id: String
   saltedUrl: String
   userId: String
 }
 
-input OtpInput {
-  saltedUrl: String
+input SaltedUrl {
+  saltedUrl: String!
 }
 
 type SessionToken @embedded {
-  userId: String
+  userId: String!
 }

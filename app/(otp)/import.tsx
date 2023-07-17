@@ -1,13 +1,23 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useOtps } from "../../store/otp.store"
 import ToggleContainer from "../../components/ToggleContainer/ToggleContainer"
 import { AddOtpByCamera, AddOtpByForm } from "./add"
 
-export default function Import() {
+type ImportProps = {
+  toggleState?: boolean
+}
+
+export default function Import({ toggleState }: ImportProps) {
   const otps = useOtps()
-  const [toggle, setToggle] = useState<boolean>(otps.length === 0)
+  const [toggle, setToggle] = useState<boolean>(toggleState ?? otps.length === 0)
+
+  useEffect(() => {
+    if (toggleState !== undefined) {
+      setToggle(toggleState)
+    }
+  }, [toggleState])
 
   return (
     <ToggleContainer className="text-left" toggleState={toggle} setToggleState={setToggle}>

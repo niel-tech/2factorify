@@ -6,9 +6,10 @@ type OtpStore = {
   filter: string | undefined
 
   actions: {
-    addOtps: (otps: OtpAuthUrl[]) => void
+    addOtps: (otps: OtpAuthUrl[], overwrite?: boolean) => void
     removeOtp: (index: number) => void
     updateFilter: (filterValue: string) => void
+    clearState: () => void
   }
 }
 
@@ -17,9 +18,11 @@ const useOtpStore = create<OtpStore>((set, getState) => ({
   filter: undefined,
 
   actions: {
-    addOtps: (otpsToAdd) => set((state) => ({ otps: state.otps.concat(otpsToAdd) })),
+    addOtps: (otpsToAdd, overwrite) =>
+      set((state) => ({ otps: overwrite ? (state.otps = otpsToAdd) : state.otps.concat(otpsToAdd) })),
     removeOtp: (index) => set((state) => ({ otps: state.otps.filter((item, i) => i !== index) })),
     updateFilter: (filterValue) => set(() => ({ filter: filterValue })),
+    clearState: () => set({ otps: [], filter: undefined }),
   },
 }))
 

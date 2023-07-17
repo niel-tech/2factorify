@@ -5,7 +5,7 @@ import useOtp from "../../../hooks/useOtp"
 import { useOtpActions } from "../../../store/otp.store"
 
 type TotpProps = {
-  otpAuthUrl: OtpAuthUrl
+  otpAuthUrl?: OtpAuthUrl
   index: number
 }
 
@@ -19,6 +19,22 @@ export default function OtpRender({ otpAuthUrl, index }: TotpProps) {
 
   const handleDeleteClick = () => {
     removeOtp(index)
+  }
+
+  if (!otpAuthUrl) {
+    return (
+      <div className="my-2.5">
+        <div className="flex items-center">
+          <h2 className="my-1 break-all text-left text-lg font-bold text-gray-700">XXX: XXX</h2>
+        </div>
+        <div className="flex items-center text-2xl font-bold text-blue-600">
+          <div className="cursor-pointer select-none">
+            <span>XXX</span>
+            <span className="ml-1">XXX</span>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
