@@ -44,7 +44,7 @@ const CreateFunctionGetOtpByUser = CreateFunction({
                     Create(Collection("otp"), {
                       data: {
                         saltedUrl: Select(["saltedUrl"], Var("otp")),
-                        userId: Select(["ref", "id"], Var("getSession")),
+                        userId: Select(["data", "userId"], Var("getSession")),
                       },
                     })
                   )

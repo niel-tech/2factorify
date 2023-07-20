@@ -3,9 +3,9 @@
 import InputLabel from "../../components/InputLabel/InputLabel"
 import { Input } from "../../components/Input/Input"
 import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react"
-import BarcodeScanner from "./components/barcodescanner"
+import BarcodeScanner from "./components/BarcodeScanner"
 import { Html5QrcodeResult } from "html5-qrcode"
-import { BuildOtpAuthUrl, OTPAuthURI, ParseOtpAuthUrl } from "../../lib/otp"
+import { BuildOtpAuthUrl, OTPAuthURI } from "../../lib/otp"
 import { useOtpActions } from "../../store/otp.store"
 import { Button } from "../../components/Button/Button"
 import { OtpAuthUrl } from "../../models/otpAuthUrl.model"
@@ -17,6 +17,7 @@ import { createQrCode } from "../../lib/qrCode"
 type AddOtpByFormProps = {
   isToggled: boolean
   setToggle: Dispatch<SetStateAction<boolean>>
+  onSubmit: (e: FormEvent, otpAuthUrl: string) => Promise<void>
 }
 
 type OtpInput = {
@@ -25,7 +26,7 @@ type OtpInput = {
   otpAuthUrl: OtpAuthUrl
 }
 
-export function AddOtpByForm({ isToggled, setToggle }: AddOtpByFormProps) {
+export function AddOtpByForm({ isToggled, setToggle, onSubmit }: AddOtpByFormProps) {
   const [input, setInput] = useState<OtpInput>({} as OtpInput)
   const [validSecret, setValidSecret] = useState<boolean | undefined>(undefined)
   const [qrCode, setQrCode] = useState<string | undefined>(undefined)
@@ -55,12 +56,15 @@ export function AddOtpByForm({ isToggled, setToggle }: AddOtpByFormProps) {
   }, [input])
 
   const handleOnSubmit = (e: FormEvent) => {
-    e.preventDefault()
-
-    if (!input.isOtpAuth || !validSecret) return
-
-    addOtps([input.otpAuthUrl as OtpAuthUrl])
-    setToggle(false)
+    onSubmit(
+      e,
+      BuildOtpAuthUrl(
+        input.otpAuthUrl.secret,
+        input.otpAuthUrl.account,
+        input.otpAuthUrl.issuer,
+        input.otpAuthUrl.period
+      )
+    )
   }
 
   const handleInputChange = (event: InputEvent) => {
@@ -227,17 +231,12 @@ export function AddOtpByForm({ isToggled, setToggle }: AddOtpByFormProps) {
 type AddOtpByCameraProps = {
   isToggled: boolean
   setToggle: Dispatch<SetStateAction<boolean>>
+  onRenderSuccessCallback: (otpAuthUrls: string[]) => void
 }
 
-export function AddOtpByCamera({ isToggled, setToggle }: AddOtpByCameraProps) {
-  const { addOtps } = useOtpActions()
-
+export function AddOtpByCamera({ isToggled, onRenderSuccessCallback: delegatedSuccessCallback }: AddOtpByCameraProps) {
   const onRenderSuccessCallback = (decodedText: string, result: Html5QrcodeResult) => {
-    if (decodedText) {
-      const otpAuthUrls = OTPAuthURI(decodedText as string).map((authUri) => ParseOtpAuthUrl(authUri))
-      setToggle(false)
-      addOtps(otpAuthUrls)
-    }
+    delegatedSuccessCallback(OTPAuthURI(decodedText as string))
   }
 
   return (

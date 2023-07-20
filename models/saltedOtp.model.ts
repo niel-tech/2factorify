@@ -1,4 +1,4 @@
 export interface SaltedOtp {
-  id: string
+  id?: string
   saltedUrl: string
 }

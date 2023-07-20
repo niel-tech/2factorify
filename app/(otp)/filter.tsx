@@ -3,10 +3,10 @@
 import { Input } from "../../components/Input/Input"
 import InputLabel from "../../components/InputLabel/InputLabel"
 import { useState } from "react"
-import { useOtpActions, useOtps } from "../../store/otp.store"
+import { useOtpActions, useOtpsStore } from "../../store/otp.store"
 
 export default function FilterOtps() {
-  const otps = useOtps()
+  const { otps } = useOtpsStore()
   const { updateFilter } = useOtpActions()
   const [filterValue, setFilterValue] = useState<string | undefined>()
 

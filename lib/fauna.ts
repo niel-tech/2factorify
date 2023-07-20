@@ -1,6 +1,7 @@
 import { Client as FaunaClient } from "faunadb"
 import { gql, GraphQLClient } from "graphql-request"
 import { Otp } from "../models/otp.model"
+import { SaltedOtp } from "../models/saltedOtp.model"
 
 export const authClient = new FaunaClient({
   secret: (process.env.NODE_ENV === "development"
@@ -38,15 +39,12 @@ export const getOtpByUser = (sessionToken: string): Promise<Otp[]> => {
 export const CREATE_BATCHED_OTP = gql`
   mutation createBatchedOtp($sessionToken: String!, $otpBatches: [SaltedUrl!]!) {
     createBatchedOtp(session_token: $sessionToken, otpBatches: $otpBatches) {
-      id
       saltedUrl
-      userId
     }
   }
 `
 
-export const createBatchedOtp = (sessionToken: string, otpBatches: { saltedUrl: string }[]): Promise<Otp[]> => {
-  console.log(CREATE_BATCHED_OTP, otpBatches)
+export const createBatchedOtp = (sessionToken: string, otpBatches: { saltedUrl: string }[]): Promise<SaltedOtp[]> => {
   return userClient
     .request(CREATE_BATCHED_OTP, { sessionToken, otpBatches })
     .then(({ createBatchedOtp }: any) => createBatchedOtp)

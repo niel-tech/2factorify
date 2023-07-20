@@ -38,7 +38,7 @@ const SVGValidUntil = ({ dashOffset }: SVGValidUntilProps) => {
   )
 }
 
-const useOtp = (otpAuthUrl?: OtpAuthUrl) => {
+const useOtpTokenizer = (otpAuthUrl?: OtpAuthUrl) => {
   const [dashOffset, setDashOffset] = useState<number>(0)
   const [token, setToken] = useState<string>()
 
@@ -87,4 +87,4 @@ const useOtp = (otpAuthUrl?: OtpAuthUrl) => {
   }
 }
 
-export default useOtp
+export default useOtpTokenizer

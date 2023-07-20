@@ -24,7 +24,6 @@ export default function Camera() {
   const switchCamera = async () => {
     const userMedia = await navigator.mediaDevices.enumerateDevices()
     const videoInputMedia = userMedia?.filter((deviceInfo) => deviceInfo.kind === "videoinput")
-    console.log(videoInputMedia)
     if (videoInputMedia?.filter((deviceInfo) => deviceInfo.deviceId !== deviceId)?.length > 0) {
       const currentCamIndex = videoInputMedia?.findIndex((deviceInfo) => deviceInfo.deviceId === deviceId)
       const getNextCamIndex = currentCamIndex === videoInputMedia?.length - 1 ? 0 : currentCamIndex + 1

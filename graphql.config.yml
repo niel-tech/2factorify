@@ -1,0 +1,9 @@
+schema: fauna/schema.graphql
+include: ["fauna/**"]
+extensions:
+  endpoints:
+    Default GraphQL Endpoint:
+      url: https://graphql.eu.fauna.com/graphql
+      headers:
+        user-agent: JS GraphQL
+      introspect: false
